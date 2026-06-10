@@ -1,0 +1,5 @@
+FROM mysql:8.3
+EXPOSE 3306
+
+environment:
+	MYSQL_ROOT_PASSWORD: 12345678
