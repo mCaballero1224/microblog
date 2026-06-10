@@ -3,3 +3,4 @@ gunicorn
 flask-wtf
 flask-migrate
 flask-sqlalchemy
+flask-login

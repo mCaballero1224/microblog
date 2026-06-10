@@ -1,13 +1,24 @@
+"""
+app/models.py
+"""
+
 from datetime import datetime, timezone
 from typing import Optional
 
 import sqlalchemy as sa
 import sqlalchemy.orm as so
+from flask_login import UserMixin
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from app import db
+from app import db, login
 
 
-class User(db.Model):
+@login.user_loader
+def load_user(id):
+    return db.session.get(User, int(id))
+
+
+class User(UserMixin, db.Model):
     """
     Class to represent a user for Microblog
     Makes use of SQLAlchemy to translate class into a Relational DB row.
@@ -20,10 +31,23 @@ class User(db.Model):
     posts: so.WriteOnlyMapped["Post"] = so.relationship(back_populates="author")
 
     def __repr__(self):
+        """Returns a string representation of the object when printed."""
         return "<User {}>".format(self.username)
+
+    def set_password(self, password):
+        """Takes a User password and saves its hash value."""
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        """Checks a given password to see if its hash matches the User's hash."""
+        return check_password_hash(self.password_hash, password)
 
 
 class Post(db.Model):
+    """
+    Class to represent a Post made by a User.
+    """
+
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     body: so.Mapped[str] = so.mapped_column(sa.String(140))
     timestamp: so.Mapped[datetime] = so.mapped_column(
@@ -33,4 +57,5 @@ class Post(db.Model):
     author: so.Mapped[User] = so.relationship(back_populates="posts")
 
     def __repr__(self):
+        """Returns a string representation of the object when printed."""
         return "<Post {}>".format(self.body)
