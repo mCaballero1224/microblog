@@ -7,10 +7,14 @@ from app.forms import LoginForm
 @app.route("/")
 @app.route("/index")
 def index():
-    user = {"username": "Miguel"}
+    user = {"username": "Michael"}
     posts = [
         {"author": {"username": "John"}, "body": "Beautiful day in Portland!"},
         {"author": {"username": "Susan"}, "body": "The Avengers movie was so cool!"},
+        {"author": {"username": "Mint"}, "body": "Akiba, I'll fight for you!"},
+        {"author": {"username": "Pheobe"}, "body": "For all otaku!"},
+        {"author": {"username": "Victoria"}, "body": "Still one of you!"},
+        {"author": {"username": "densetsu.exe"}, "body": "BURNING ON!"},
     ]
     return render_template("index.html", user=user, posts=posts)
 
