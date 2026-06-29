@@ -9,6 +9,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
+from hashlib import md5
 
 from app import db, login
 
@@ -33,6 +34,10 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         """Returns a string representation of the object when printed."""
         return "<User {}>".format(self.username)
+
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
 
     def set_password(self, password):
         """Takes a User password and saves its hash value."""
